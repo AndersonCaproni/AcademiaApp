@@ -1,0 +1,58 @@
+﻿@model IEnumerable<AcademiaApp.Models.Treino>
+
+@{
+    Layout = "~/Views/Aluno/_LayoutAluno.cshtml";
+    ViewData["Title"] = "Treinos do Dia";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3">Treinos do Dia</h1>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body">
+        <table class="table align-middle table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Personal</th>
+                    <th>Data do Treino</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Personal.Nome</td>
+                        <td>@item.DataTreino.ToString("dd/MM/yyyy")</td>
+                        <td class="text-center">
+                            @if (item.Status == true)
+                            {
+                                <span class="badge bg-success">Feito</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">Não Feito</span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            @if (!item.Status)
+                            {
+                                <a asp-action="MarcarComoFeito" asp-route-id="@item.Id" class="btn btn-sm btn-outline-success me-2">
+                                    ✅ Marcar como Feito
+                                </a>
+                            }
+                            <a asp-action="DetailAluno" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary me-2">
+                                📖 Detalhes
+                            </a>
+                            <a asp-action="DeleteAluno" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">
+                                🗑️ Excluir
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

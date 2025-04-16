@@ -1,0 +1,61 @@
+﻿@model TreinoEditViewModel;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Usuario> SignInManager
+@inject UserManager<Usuario> UserManager
+
+@{
+    Layout = "~/Views/Personal/_LayoutPersonal.cshtml";
+    ViewData["Title"] = "Detalhes do Treino";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="h4">📋 Detalhes do Treino</h2>
+</div>
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+        <div class="mb-3">
+            <label class="form-label fw-bold">Aluno</label>
+            <p class="form-control-plaintext">@ViewBag.TreinoCompleto?.Aluno?.Nome</p>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Data e Hora do Treino</label>
+            <p class="form-control-plaintext">@Model.DataTreino?.ToString("dd/MM/yyyy HH:mm")</p>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Status</label>
+            <p>
+                @if (ViewBag.TreinoCompleto?.Status == true)
+                {
+                    <span class="badge bg-success">Feito</span>
+                }
+                else
+                {
+                    <span class="badge bg-warning text-dark">Não feito</span>
+                }
+            </p>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Exercícios Selecionados</label>
+            <ul class="list-group">
+                @foreach (var exercicioId in Model.ExerciciosSelecionados)
+                {
+                    var exercicio = Model.ExerciciosDisponiveis.FirstOrDefault(e => e.Value == exercicioId.ToString());
+                    if (exercicio != null)
+                    {
+                        <li class="list-group-item">@exercicio.Text</li>
+                    }
+                }
+            </ul>
+        </div>
+
+        <div class="text-end mt-4">
+            <a class="btn btn-outline-secondary" asp-controller="Treino" asp-action="ListarPorPersonal" asp-route-id="@UserManager.GetUserId(User)">
+                🔙 Voltar
+            </a>
+        </div>
+    </div>
+</div>

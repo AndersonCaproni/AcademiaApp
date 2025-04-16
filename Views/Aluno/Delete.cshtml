@@ -1,0 +1,44 @@
+﻿@model Aluno
+
+@{
+    ViewData["Title"] = "Excluir Aluno";
+    Layout = "~/Views/Aluno/_LayoutAluno.cshtml";
+}
+
+<h2 class="text-danger mb-4">🗑️ Confirmar Exclusão</h2>
+
+<div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body p-4">
+        <h5 class="mb-3">Você tem certeza que deseja excluir o seguinte Aluno?</h5>
+        <hr />
+
+        <dl class="row mb-0">
+            <dt class="col-sm-4 text-muted">Nome</dt>
+            <dd class="col-sm-8 fw-semibold">@Model.Nome</dd>
+
+            <dt class="col-sm-4 text-muted">Email</dt>
+            <dd class="col-sm-8 fw-semibold">@Model.Email</dd>
+
+            <dt class="col-sm-4 text-muted">CPF</dt>
+            <dd class="col-sm-8 fw-semibold">@Model.CPF</dd>
+
+            <dt class="col-sm-4 text-muted">Telefone</dt>
+            <dd class="col-sm-8 fw-semibold">@Model.Telefone</dd>
+
+            <dt class="col-sm-4 text-muted">Data de Nascimento</dt>
+            <dd class="col-sm-8 fw-semibold">@Model.DataNascimento.ToString("dd/MM/yyyy")</dd>
+        </dl>
+
+        <div class="d-flex gap-2 mt-4">
+            <form asp-action="Delete" method="post" class="d-inline">
+                <input type="hidden" asp-for="Id" />
+                <button type="submit" class="btn btn-outline-danger rounded-pill px-4">
+                    🗑️ Excluir
+                </button>
+            </form>
+            <a asp-action="Detail" asp-route-id="@Model.Id" class="btn btn-outline-secondary rounded-pill px-4">
+                ❌ Cancelar
+            </a>
+        </div>
+    </div>
+</div>

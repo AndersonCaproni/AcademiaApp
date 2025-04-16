@@ -1,0 +1,47 @@
+﻿@model IEnumerable<AcademiaApp.Models.Exercicio>
+
+@{
+    Layout = "~/Views/Personal/_LayoutPersonal.cshtml";
+    ViewData["Title"] = "Gerenciar Exercícios";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3">Exercícios</h1>
+    <a asp-action="Create" class="btn btn-primary">➕ Novo Exercício</a>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body">
+        <table class="table align-middle table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Nome</th>
+                    <th>Categoria</th>
+                    <th>Descrição</th>
+                    <th class="text-center">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Nome</td>
+                        <td>@item.Categoria</td>
+                        <td>@item.Descricao</td>
+                        <td class="text-center">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary me-2">
+                                ✏️ Editar
+                            </a>
+                            <a asp-action="DetailsPersonal" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary me-2">
+                                📖 Detalhes
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">
+                                🗑️ Excluir
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

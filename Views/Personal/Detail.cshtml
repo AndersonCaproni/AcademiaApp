@@ -1,0 +1,41 @@
+﻿@model Personal
+
+@{
+    Layout = "~/Views/Personal/_LayoutPersonal.cshtml";
+    ViewData["Title"] = "Detalhes do Personal";
+}
+
+<h2 class="mb-4">📄 Detalhes do Personal</h2>
+
+<div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body p-4">
+        <dl class="row mb-0">
+            <dt class="col-sm-4 text-muted">Nome</dt>
+            <dd class="col-sm-8 fw-semibold">@Model.Nome</dd>
+
+            <dt class="col-sm-4 text-muted">Email</dt>
+            <dd class="col-sm-8 fw-semibold">@Model.Email</dd>
+
+            <dt class="col-sm-4 text-muted">CREF</dt>
+            <dd class="col-sm-8 fw-semibold">@Model.CREF</dd>
+
+            <dt class="col-sm-4 text-muted">Data de Nascimento</dt>
+            <dd class="col-sm-8 fw-semibold">@Model.DataNascimento.ToString("dd/MM/yyyy")</dd>
+
+            <dt class="col-sm-4 text-muted">Telefone</dt>
+            <dd class="col-sm-8 fw-semibold">@Model.Telefone</dd>
+
+            <dt class="col-sm-4 text-muted">CPF</dt>
+            <dd class="col-sm-8 fw-semibold">@Model.CPF</dd>
+        </dl>
+
+        <div class="mt-4 d-flex gap-2">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary rounded-pill px-4">
+                ✏️ Editar
+            </a>
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger rounded-pill px-4">
+                🗑️ Excluir
+            </a>
+        </div>
+    </div>
+</div>
