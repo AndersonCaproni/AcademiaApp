@@ -38,9 +38,12 @@
                             }
                         </td>
                         <td class="text-center">
+                            @if (item.Status == false)
+                            {
                             <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary me-2">
                                 ✏️ Editar
                             </a>
+                            }
                             <a asp-action="DetailPersonal" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary me-2">
                                 📖 Detalhes
                             </a>
