@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AcademiaApp.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20250414132402_TirandoObrigatorio")]
-    partial class TirandoObrigatorio
+    [Migration("20250428130920_inicial")]
+    partial class inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,14 +39,6 @@ namespace AcademiaApp.Migrations
                         .HasMaxLength(125)
                         .HasColumnType("nvarchar(125)")
                         .HasColumnName("Categoria");
-
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("DataCriacao");
-
-                    b.Property<DateTime>("DataExclusao")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("DataExclusao");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
@@ -78,14 +70,6 @@ namespace AcademiaApp.Migrations
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("AlunoId");
 
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("DataCriacao");
-
-                    b.Property<DateTime>("DataExclusao")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("DataExclusao");
-
                     b.Property<DateTime>("DataTreino")
                         .HasColumnType("datetime2")
                         .HasColumnName("DataTreino");
@@ -94,6 +78,10 @@ namespace AcademiaApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("PersonalId");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit")
+                        .HasColumnName("Status");
 
                     b.HasKey("Id");
 
@@ -345,12 +333,6 @@ namespace AcademiaApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataExclusao")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("DataNascimento")
                         .HasColumnType("datetime2");
 
@@ -388,13 +370,13 @@ namespace AcademiaApp.Migrations
                     b.HasOne("AcademiaApp.Models.Aluno", "Aluno")
                         .WithMany("Treinos")
                         .HasForeignKey("AlunoId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("AcademiaApp.Models.Personal", "Personal")
                         .WithMany("Treinos")
                         .HasForeignKey("PersonalId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Aluno");

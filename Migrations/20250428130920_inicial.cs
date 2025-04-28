@@ -34,8 +34,6 @@ namespace AcademiaApp.Migrations
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DataNascimento = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Telefone = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DataExclusao = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CPF = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CREF = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -66,9 +64,7 @@ namespace AcademiaApp.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nome = table.Column<string>(type: "nvarchar(125)", maxLength: 125, nullable: false),
                     Categoria = table.Column<string>(type: "nvarchar(125)", maxLength: 125, nullable: false),
-                    Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DataExclusao = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -190,8 +186,7 @@ namespace AcademiaApp.Migrations
                     AlunoId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     PersonalId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     DataTreino = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DataExclusao = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -201,13 +196,13 @@ namespace AcademiaApp.Migrations
                         column: x => x.AlunoId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Treinos_AspNetUsers_PersonalId",
                         column: x => x.PersonalId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
