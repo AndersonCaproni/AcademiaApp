@@ -32,16 +32,53 @@
             <div class="mb-3">
                 <label class="form-label fw-semibold">Exercícios</label>
                 <div class="ms-2">
-                    @foreach (var item in Model.ExerciciosDisponiveis)
+                    @for (var i = 0; i < Model.ExerciciosDisponiveis.Count; i++)
                     {
-                        var isChecked = Model.ExerciciosSelecionados.Contains(int.Parse(item.Value));
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="ExerciciosSelecionados" value="@item.Value" id="exercicio_@item.Value" @(isChecked ? "checked" : "") />
-                            <label class="form-check-label" for="exercicio_@item.Value">
-                                @item.Text
+                        var exercicio = Model.ExerciciosDisponiveis[i];
+                        var exercicioSelecionado = Model.ExerciciosSelecionados?.FirstOrDefault(e => e.Id.ToString() == exercicio.Value);
+                        var isChecked = exercicioSelecionado != null;
+                        <div class="form-check mb-2">
+
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   name="ExerciciosSelecionados[@i].Id"
+                                   value="@exercicio.Value"
+                                   id="checkbox_@i"
+                                   data-index="@i"
+                                   data-exercicio-value="@exercicio.Value"
+                            @(isChecked ? "checked" : "") />
+
+                            <label class="form-check-label" for="checkbox_@i">
+                                @exercicio.Text
                             </label>
+
+                            <div class="ms-4 mt-2 @(isChecked ? "" : "d-none")" id="inputs_@i">
+                                <div class="row g-2 mb-2">
+                                    <div class="col-6">
+                                        <label class="form-label small mb-1" for="series_@i">Séries</label>
+                                        <input type="number" class="form-control form-control-sm"
+                                               id="series_@i"
+                                               name="ExerciciosSelecionados[@i].qtdSeries"
+                                               value="@(exercicioSelecionado?.qtdSeries)"
+                                        @(isChecked ? "" : "disabled")
+                                               min="1" placeholder="Qtd. séries" />
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label small mb-1" for="repeticoes_@i">Repetições</label>
+                                        <input type="number" class="form-control form-control-sm"
+                                               id="repeticoes_@i"
+                                               name="ExerciciosSelecionados[@i].qtdRepeticoes"
+                                               value="@(exercicioSelecionado?.qtdRepeticoes)"
+                                        @(isChecked ? "" : "disabled")
+                                               min="1" placeholder="Qtd. repetições" />
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
+                        <hr />
                     }
+
                 </div>
                 <span asp-validation-for="ExerciciosSelecionados" class="text-danger small"></span>
             </div>
@@ -57,3 +94,54 @@
         </form>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.form-check-input[type="checkbox"]').forEach(function (checkbox) {
+                var index = checkbox.dataset.index;
+                var inputsDiv = document.getElementById('inputs_' + index);
+                var inputs = inputsDiv.querySelectorAll('input');
+
+                function updateInputs() {
+                    if (checkbox.checked) {
+                        inputsDiv.classList.remove('d-none');
+                        inputs[0].disabled = false;
+                        inputs[1].disabled = false;
+
+                        inputs[0].required = true;
+                        inputs[1].required = true;
+
+                        checkbox.name = `ExerciciosSelecionados[${index}].Id`;
+                        inputs[0].name = `ExerciciosSelecionados[${index}].qtdSeries`;
+                        inputs[1].name = `ExerciciosSelecionados[${index}].qtdRepeticoes`;
+
+                        checkbox.value = checkbox.dataset.exercicioValue;
+                    } else {
+                        inputsDiv.classList.add('d-none');
+                        inputs.forEach(input => {
+                            input.value = '';
+                            input.disabled = true;
+                            input.required = false;
+                            input.removeAttribute('name');
+                        });
+                        checkbox.removeAttribute('name');
+                    }
+                }
+
+                updateInputs();
+                checkbox.addEventListener('change', updateInputs);
+            });
+
+            var form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', function () {
+                    document.querySelectorAll('input:disabled').forEach(function (input) {
+                        input.disabled = false;
+                    });
+                });
+            }
+        });
+    </script>
+}
+

@@ -67,11 +67,18 @@ namespace AcademiaApp.Controllers
 
             ViewBag.TreinoCompleto = treino;
 
+
             var model = new TreinoEditViewModel
             {
                 AlunoId = treino.AlunoId,
                 DataTreino = treino.DataTreino,
-                ExerciciosSelecionados = treino.TreinosExercicios.Select(te => te.ExercicioId).ToList(),
+                ExerciciosSelecionados = treino.TreinosExercicios.Select(x => new ListaExercicios
+                {
+                    Id = x.ExercicioId,
+                    qtdSeries = x.qtdSeries,
+                    qtdRepeticoes = x.qtdRepeticoes
+                }
+                ).ToList(),
                 ExerciciosDisponiveis = _context.Exercicios
                     .Select(e => new SelectListItem
                     {
@@ -87,9 +94,9 @@ namespace AcademiaApp.Controllers
         public async Task<IActionResult> DetailAluno(int id)
         {
             var treino = await _context.Treinos
-                .Include(t => t.Personal) 
+                .Include(t => t.Personal)
                 .Include(t => t.TreinosExercicios)
-                .ThenInclude(te => te.Exercicio) 
+                .ThenInclude(te => te.Exercicio)
                 .FirstOrDefaultAsync(t => t.Id == id);
 
             if (treino == null)
@@ -103,7 +110,13 @@ namespace AcademiaApp.Controllers
             {
                 PersonalId = treino.PersonalId,
                 DataTreino = treino.DataTreino,
-                ExerciciosSelecionados = treino.TreinosExercicios.Select(te => te.ExercicioId).ToList(),
+                ExerciciosSelecionados = treino.TreinosExercicios.Select(x => new ListaExercicios
+                {
+                    Id = x.ExercicioId,
+                    qtdSeries = x.qtdSeries,
+                    qtdRepeticoes = x.qtdRepeticoes
+                }
+                ).ToList(),
                 ExerciciosDisponiveis = _context.Exercicios
                     .Select(e => new SelectListItem
                     {
@@ -141,11 +154,14 @@ namespace AcademiaApp.Controllers
         {
             if (!ModelState.IsValid)
             {
+                var exerciciosSelecionadosIds = model.ExerciciosSelecionados?.Select(e => e.Id).ToList() ?? new List<long>();
+
                 model.ExerciciosDisponiveis = _context.Exercicios
                     .Select(e => new SelectListItem
                     {
                         Value = e.Id.ToString(),
-                        Text = e.Nome
+                        Text = e.Nome,
+                        Selected = exerciciosSelecionadosIds.Contains(e.Id)
                     }).ToList();
 
                 ViewBag.Alunos = _context.Set<Aluno>()
@@ -181,9 +197,11 @@ namespace AcademiaApp.Controllers
                 DataTreino = (DateTime)model.DataTreino,
                 PersonalId = user.Id,
                 Status = false,
-                TreinosExercicios = model.ExerciciosSelecionados.Select(eid => new TreinosExercicios
+                TreinosExercicios = model.ExerciciosSelecionados.Select(x => new TreinosExercicios
                 {
-                    ExercicioId = eid
+                    ExercicioId = x.Id,
+                    qtdSeries = x.qtdSeries,
+                    qtdRepeticoes = x.qtdRepeticoes
                 }).ToList()
             };
 
@@ -210,7 +228,13 @@ namespace AcademiaApp.Controllers
             {
                 AlunoId = treino.AlunoId,
                 DataTreino = treino.DataTreino,
-                ExerciciosSelecionados = treino.TreinosExercicios.Select(te => te.ExercicioId).ToList(),
+                ExerciciosSelecionados = treino.TreinosExercicios.Select(x => new ListaExercicios
+                {
+                    Id = x.ExercicioId,
+                    qtdSeries = x.qtdSeries,
+                    qtdRepeticoes = x.qtdRepeticoes
+                }
+                ).ToList(),
                 ExerciciosDisponiveis = _context.Exercicios
                     .Select(e => new SelectListItem
                     {
@@ -232,21 +256,19 @@ namespace AcademiaApp.Controllers
         {
             if (!ModelState.IsValid)
             {
+                var exerciciosSelecionadosIds = model.ExerciciosSelecionados?.Select(e => e.Id).ToList() ?? new List<long>();
+
                 model.ExerciciosDisponiveis = _context.Exercicios
                     .Select(e => new SelectListItem
                     {
                         Value = e.Id.ToString(),
-                        Text = e.Nome
+                        Text = e.Nome,
+                        Selected = exerciciosSelecionadosIds.Contains(e.Id)
                     }).ToList();
 
                 ViewBag.Alunos = _context.Set<Aluno>()
                     .Select(a => new { a.Id, a.Nome })
                     .ToList();
-
-                if (model.ExerciciosSelecionados == null)
-                {
-                    model.ExerciciosSelecionados = new List<long>();
-                }
 
                 return View(model);
             }
@@ -282,11 +304,13 @@ namespace AcademiaApp.Controllers
             treino.DataTreino = (DateTime)model.DataTreino;
             treino.TreinosExercicios.Clear();
 
-            foreach (var exercicioId in model.ExerciciosSelecionados)
+            foreach (var exercicio in model.ExerciciosSelecionados)
             {
                 treino.TreinosExercicios.Add(new TreinosExercicios
                 {
-                    ExercicioId = exercicioId
+                    ExercicioId = exercicio.Id,
+                    qtdRepeticoes = exercicio.qtdRepeticoes,
+                    qtdSeries = exercicio.qtdSeries
                 });
             }
 
@@ -319,7 +343,13 @@ namespace AcademiaApp.Controllers
             {
                 PersonalId = treino.PersonalId,
                 DataTreino = treino.DataTreino,
-                ExerciciosSelecionados = treino.TreinosExercicios.Select(te => te.ExercicioId).ToList(),
+                ExerciciosSelecionados = treino.TreinosExercicios.Select(x => new ListaExercicios
+                {
+                    Id = x.ExercicioId,
+                    qtdSeries = x.qtdSeries,
+                    qtdRepeticoes = x.qtdRepeticoes
+                }
+                ).ToList(),
                 ExerciciosDisponiveis = _context.Exercicios
                     .Select(e => new SelectListItem
                     {
@@ -388,7 +418,7 @@ namespace AcademiaApp.Controllers
         public async Task<IActionResult> DeleteAluno(int id)
         {
             var treino = await _context.Treinos
-                .Include(t => t.Personal) 
+                .Include(t => t.Personal)
                 .FirstOrDefaultAsync(t => t.Id == id);
 
             if (treino == null)
@@ -396,7 +426,7 @@ namespace AcademiaApp.Controllers
                 return NotFound();
             }
 
-            ViewBag.Personal= treino.Personal;
+            ViewBag.Personal = treino.Personal;
 
             return View(treino);
         }

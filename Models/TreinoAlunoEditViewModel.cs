@@ -13,7 +13,7 @@ namespace AcademiaApp.Models
         public DateTime? DataTreino { get; set; }
 
         [Required(ErrorMessage = "É necessário selecionar pelo menos 4 exercícios.")]
-        public List<long> ExerciciosSelecionados { get; set; }
+        public List<ListaExercicios> ExerciciosSelecionados { get; set; }
 
         [ValidateNever]
         public List<SelectListItem> ExerciciosDisponiveis { get; set; }

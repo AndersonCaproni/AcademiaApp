@@ -106,6 +106,14 @@ namespace AcademiaApp.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("TreinoId");
 
+                    b.Property<int>("qtdRepeticoes")
+                        .HasColumnType("int")
+                        .HasColumnName("qtdRepeticoes");
+
+                    b.Property<int>("qtdSeries")
+                        .HasColumnType("int")
+                        .HasColumnName("qtdSeries");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ExercicioId");
